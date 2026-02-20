@@ -42,7 +42,7 @@ const Dashboard = () => {
     <div className="page-container space-y-8">
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="space-y-1">
-        <h1 className="text-3xl font-display font-bold">Welcome back, Nicku 👋</h1>
+        <h1 className="text-2xl sm:text-3xl font-display font-bold">Welcome back, Nicku 👋</h1>
         <p className="section-subtitle">Here's your learning overview for today</p>
       </motion.div>
 
@@ -66,24 +66,24 @@ const Dashboard = () => {
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="glass-card p-6">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="glass-card p-4 sm:p-6">
           <h3 className="font-display font-semibold mb-4">Weekly Reading Hours</h3>
-          <ResponsiveContainer width="100%" height={220}>
+          <ResponsiveContainer width="100%" height={180}>
             <BarChart data={weeklyData}>
-              <XAxis dataKey="day" axisLine={false} tickLine={false} className="text-xs" />
-              <YAxis axisLine={false} tickLine={false} className="text-xs" />
+              <XAxis dataKey="day" axisLine={false} tickLine={false} className="text-xs" tick={{ fontSize: 11 }} />
+              <YAxis axisLine={false} tickLine={false} className="text-xs" tick={{ fontSize: 11 }} width={30} />
               <Tooltip contentStyle={{ borderRadius: "0.75rem", border: "1px solid hsl(var(--border))", background: "hsl(var(--card))" }} />
               <Bar dataKey="hours" fill="hsl(var(--primary))" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="glass-card p-6">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }} className="glass-card p-4 sm:p-6">
           <h3 className="font-display font-semibold mb-4">Monthly Pages Read</h3>
-          <ResponsiveContainer width="100%" height={220}>
+          <ResponsiveContainer width="100%" height={180}>
             <AreaChart data={monthlyData}>
-              <XAxis dataKey="week" axisLine={false} tickLine={false} className="text-xs" />
-              <YAxis axisLine={false} tickLine={false} className="text-xs" />
+              <XAxis dataKey="week" axisLine={false} tickLine={false} className="text-xs" tick={{ fontSize: 11 }} />
+              <YAxis axisLine={false} tickLine={false} className="text-xs" tick={{ fontSize: 11 }} width={35} />
               <Tooltip contentStyle={{ borderRadius: "0.75rem", border: "1px solid hsl(var(--border))", background: "hsl(var(--card))" }} />
               <Area type="monotone" dataKey="pages" stroke="hsl(var(--accent))" fill="hsl(var(--accent) / 0.15)" strokeWidth={2} />
             </AreaChart>
@@ -93,7 +93,7 @@ const Dashboard = () => {
 
       {/* Recent Books + Quick Actions */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="lg:col-span-2 glass-card p-6">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.5 }} className="lg:col-span-2 glass-card p-4 sm:p-6">
           <h3 className="font-display font-semibold mb-4">Continue Reading</h3>
           <div className="space-y-3">
             {recentBooks.map((book) => (
@@ -105,8 +105,8 @@ const Dashboard = () => {
                   <p className="font-medium text-sm truncate">{book.title}</p>
                   <p className="text-xs text-muted-foreground">{book.author} · {book.category}</p>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
-                  <div className="w-24 h-1.5 bg-muted rounded-full overflow-hidden">
+                <div className="flex items-center gap-3 shrink-0 hidden sm:flex">
+                  <div className="w-20 sm:w-24 h-1.5 bg-muted rounded-full overflow-hidden">
                     <div className="h-full rounded-full gradient-primary" style={{ width: `${book.progress}%` }} />
                   </div>
                   <span className="text-xs font-medium text-muted-foreground w-8">{book.progress}%</span>
@@ -116,7 +116,7 @@ const Dashboard = () => {
           </div>
         </motion.div>
 
-        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="glass-card p-6 space-y-3">
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }} className="glass-card p-4 sm:p-6 space-y-3">
           <h3 className="font-display font-semibold mb-2">Quick Actions</h3>
           {[
             { icon: Users, label: "Join Study Room", desc: "3 active rooms" },
