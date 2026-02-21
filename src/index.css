@@ -163,11 +163,11 @@
   }
 
   .page-container {
-    @apply p-4 sm:p-6 md:p-8 max-w-7xl mx-auto w-full;
+    @apply p-3 sm:p-5 md:p-8 max-w-7xl mx-auto w-full;
   }
 
   .section-title {
-    @apply text-xl sm:text-2xl font-bold tracking-tight;
+    @apply text-lg sm:text-xl md:text-2xl font-bold tracking-tight;
   }
 
   .section-subtitle {

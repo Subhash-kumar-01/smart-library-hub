@@ -58,19 +58,19 @@ const RequestsPage = () => {
               transition={{ delay: i * 0.06 }}
               className="glass-card p-5 hover:shadow-lg transition-all duration-300"
             >
-              <div className="flex items-center gap-4">
-                <div className="h-11 w-8 rounded-md gradient-hero flex items-center justify-center shrink-0">
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="h-11 w-8 rounded-md gradient-hero flex items-center justify-center shrink-0 hidden sm:flex">
                   <FileText className="h-4 w-4 text-primary-foreground" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-sm truncate">{req.title}</h3>
-                  <p className="text-xs text-muted-foreground">by {req.author} · Requested by {req.requestedBy}</p>
+                  <p className="text-xs text-muted-foreground truncate">by {req.author} · {req.requestedBy}</p>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
                   <span className="text-xs text-muted-foreground hidden sm:block">{req.date}</span>
                   <Badge variant="secondary" className={`text-[10px] gap-1 ${cfg.color}`}>
                     <cfg.icon className="h-3 w-3" />
-                    {cfg.label}
+                    <span className="hidden sm:inline">{cfg.label}</span>
                   </Badge>
                 </div>
               </div>

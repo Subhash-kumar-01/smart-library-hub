@@ -104,16 +104,16 @@ const SchedulerPage = () => {
               <Award className="h-5 w-5 text-primary" />
               <h3 className="font-display font-semibold">Achievements</h3>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
               {achievements.map((badge) => (
                 <div
                   key={badge.label}
-                  className={`flex flex-col items-center gap-1.5 p-3 rounded-lg text-center transition-colors ${
+                  className={`flex flex-col items-center gap-1 sm:gap-1.5 p-2 sm:p-3 rounded-lg text-center transition-colors ${
                     badge.earned ? "bg-primary/5" : "bg-muted/50 opacity-40"
                   }`}
                 >
-                  <badge.icon className={`h-5 w-5 ${badge.earned ? "text-primary" : "text-muted-foreground"}`} />
-                  <span className="text-[10px] font-medium leading-tight">{badge.label}</span>
+                  <badge.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${badge.earned ? "text-primary" : "text-muted-foreground"}`} />
+                  <span className="text-[9px] sm:text-[10px] font-medium leading-tight">{badge.label}</span>
                 </div>
               ))}
             </div>
