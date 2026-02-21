@@ -14,7 +14,7 @@ const ProfilePage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile Card */}
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.1 }} className="glass-card p-6 text-center">
-          <div className="h-20 w-20 rounded-full gradient-hero flex items-center justify-center text-primary-foreground text-2xl font-display font-bold mx-auto mb-4">
+          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full gradient-hero flex items-center justify-center text-primary-foreground text-xl sm:text-2xl font-display font-bold mx-auto mb-4">
             N
           </div>
           <h2 className="font-display font-bold text-lg">Nicku</h2>
@@ -34,11 +34,11 @@ const ProfilePage = () => {
             ))}
           </div>
 
-          <div className="flex gap-2 mt-6">
-            <Button variant="outline" size="sm" className="flex-1 text-xs gap-1.5">
+          <div className="flex flex-col sm:flex-row gap-2 mt-6">
+            <Button variant="outline" size="sm" className="flex-1 text-xs gap-1.5 h-9">
               <Settings className="h-3.5 w-3.5" /> Settings
             </Button>
-            <Button variant="outline" size="sm" className="flex-1 text-xs gap-1.5 text-destructive hover:text-destructive">
+            <Button variant="outline" size="sm" className="flex-1 text-xs gap-1.5 h-9 text-destructive hover:text-destructive">
               <LogOut className="h-3.5 w-3.5" /> Sign Out
             </Button>
           </div>

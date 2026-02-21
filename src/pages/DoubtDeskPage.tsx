@@ -49,9 +49,9 @@ const DoubtDeskPage = () => {
               transition={{ delay: i * 0.06 }}
               className="glass-card p-5 hover:shadow-lg transition-all duration-300 cursor-pointer"
             >
-              <div className="flex gap-4">
+              <div className="flex gap-3 sm:gap-4">
                 <div className="flex flex-col items-center gap-1 shrink-0">
-                  <button className="p-1 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-primary">
+                  <button className="p-1.5 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-primary">
                     <ThumbsUp className="h-4 w-4" />
                   </button>
                   <span className="text-sm font-bold">{q.votes}</span>
