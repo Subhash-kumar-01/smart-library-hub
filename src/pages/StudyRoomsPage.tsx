@@ -1,9 +1,27 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Users, Lock, Globe, Timer, Crown, Plus, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "@/hooks/use-toast";
 
-const rooms = [
+type Room = {
+  id: number;
+  name: string;
+  host: string;
+  members: number;
+  max: number;
+  type: "public" | "private";
+  topic: string;
+  timer: string;
+  focused: number;
+};
+
+const initialRooms: Room[] = [
   { id: 1, name: "DSA Marathon", host: "Arjun K.", members: 12, max: 20, type: "public", topic: "Algorithms", timer: "45:22", focused: 8 },
   { id: 2, name: "JEE Physics Grind", host: "Priya S.", members: 8, max: 10, type: "private", topic: "Physics", timer: "32:10", focused: 6 },
   { id: 3, name: "Literature Circle", host: "Maya R.", members: 5, max: 15, type: "public", topic: "Literature", timer: "18:45", focused: 4 },
@@ -13,6 +31,39 @@ const rooms = [
 ];
 
 const StudyRoomsPage = () => {
+  const [rooms, setRooms] = useState<Room[]>(initialRooms);
+  const [open, setOpen] = useState(false);
+  const [form, setForm] = useState({ name: "", topic: "", max: "10", type: "public" as "public" | "private" });
+
+  const handleCreate = () => {
+    if (!form.name.trim() || !form.topic.trim()) {
+      toast({ title: "Missing info", description: "Room name and topic are required." });
+      return;
+    }
+    const newRoom: Room = {
+      id: Date.now(),
+      name: form.name.trim(),
+      host: "You",
+      members: 1,
+      max: parseInt(form.max) || 10,
+      type: form.type,
+      topic: form.topic.trim(),
+      timer: "00:00",
+      focused: 1,
+    };
+    setRooms([newRoom, ...rooms]);
+    setForm({ name: "", topic: "", max: "10", type: "public" });
+    setOpen(false);
+    toast({ title: "Room created", description: `${newRoom.name} is live.` });
+  };
+
+  const handleJoin = (room: Room) => {
+    setRooms((prev) =>
+      prev.map((r) => (r.id === room.id && r.members < r.max ? { ...r, members: r.members + 1, focused: r.focused + 1 } : r)),
+    );
+    toast({ title: "Joined room", description: `Welcome to ${room.name}.` });
+  };
+
   return (
     <div className="page-container space-y-6">
       <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="flex items-start justify-between flex-wrap gap-4">
@@ -20,16 +71,56 @@ const StudyRoomsPage = () => {
           <h1 className="section-title">Study Rooms</h1>
           <p className="section-subtitle">Focus together, achieve more</p>
         </div>
-        <Button className="gradient-primary text-primary-foreground gap-2">
-          <Plus className="h-4 w-4" /> Create Room
-        </Button>
+        <Dialog open={open} onOpenChange={setOpen}>
+          <DialogTrigger asChild>
+            <Button className="gradient-primary text-primary-foreground gap-2">
+              <Plus className="h-4 w-4" /> Create Room
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Create study room</DialogTitle>
+              <DialogDescription>Set up a focused space for you and your peers.</DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4 py-2">
+              <div className="space-y-2">
+                <Label htmlFor="room-name">Room name</Label>
+                <Input id="room-name" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Morning DSA Sprint" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="room-topic">Topic</Label>
+                <Input id="room-topic" value={form.topic} onChange={(e) => setForm({ ...form, topic: e.target.value })} placeholder="e.g. Algorithms" />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="room-max">Max members</Label>
+                  <Input id="room-max" type="number" min={2} max={100} value={form.max} onChange={(e) => setForm({ ...form, max: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>Visibility</Label>
+                  <Select value={form.type} onValueChange={(v: "public" | "private") => setForm({ ...form, type: v })}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="public">Public</SelectItem>
+                      <SelectItem value="private">Private</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+              <Button className="gradient-primary text-primary-foreground" onClick={handleCreate}>Create room</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </motion.div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: "Active Rooms", value: "6", icon: Users },
-          { label: "Students Online", value: "80", icon: Zap },
+          { label: "Active Rooms", value: String(rooms.length), icon: Users },
+          { label: "Students Online", value: String(rooms.reduce((a, r) => a + r.members, 0)), icon: Zap },
           { label: "Avg Focus Time", value: "42 min", icon: Timer },
           { label: "Top Streak", value: "Vikram P.", icon: Crown },
         ].map((stat, i) => (
@@ -77,7 +168,6 @@ const StudyRoomsPage = () => {
               </div>
             </div>
 
-            {/* Members bar */}
             <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-3">
               <div className="h-full rounded-full gradient-primary" style={{ width: `${(room.members / room.max) * 100}%` }} />
             </div>
@@ -95,7 +185,9 @@ const StudyRoomsPage = () => {
                   </div>
                 )}
               </div>
-              <Button size="sm" variant="outline" className="h-7 text-xs">Join</Button>
+              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => handleJoin(room)} disabled={room.members >= room.max}>
+                {room.members >= room.max ? "Full" : "Join"}
+              </Button>
             </div>
           </motion.div>
         ))}
