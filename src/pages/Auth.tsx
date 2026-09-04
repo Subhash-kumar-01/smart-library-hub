@@ -218,7 +218,37 @@ export default function Auth() {
             <span className="text-xl font-bold">MyLib</span>
           </div>
 
+          {pendingEmail ? (
+            <div className="glass-card-elevated p-6 sm:p-8 text-center">
+              <div className="mx-auto h-14 w-14 rounded-2xl gradient-primary flex items-center justify-center text-primary-foreground mb-4">
+                <MailCheck className="h-7 w-7" />
+              </div>
+              <h2 className="text-2xl font-bold tracking-tight">Verify your email</h2>
+              <p className="text-sm text-muted-foreground mt-2">
+                We sent a verification link to <span className="font-medium text-foreground">{pendingEmail}</span>. Click it to
+                activate your account, then log in to reach your dashboard.
+              </p>
+              <div className="mt-6 space-y-3">
+                <Button onClick={handleResend} disabled={loading} variant="outline" className="w-full h-11">
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Resend verification email"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setPendingEmail(null);
+                    setTab("login");
+                  }}
+                  className="w-full h-11"
+                >
+                  Go to log in
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-4">
+                Can't find it? Check your spam or promotions folder.
+              </p>
+            </div>
+          ) : (
           <div className="glass-card-elevated p-6 sm:p-8">
+
             <Tabs value={tab} onValueChange={(v) => setTab(v as any)} className="w-full">
               <TabsList className="grid grid-cols-2 w-full mb-6">
                 <TabsTrigger value="login">Log in</TabsTrigger>
