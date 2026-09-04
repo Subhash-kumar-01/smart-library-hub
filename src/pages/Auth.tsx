@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2, BookOpen, Sparkles, GraduationCap, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, Loader2, BookOpen, Sparkles, GraduationCap, ShieldCheck, MailCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
