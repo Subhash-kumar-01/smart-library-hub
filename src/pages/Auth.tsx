@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Eye, EyeOff, Loader2, BookOpen, Sparkles, GraduationCap, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, Loader2, BookOpen, Sparkles, GraduationCap, ShieldCheck, MailCheck } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -60,6 +60,8 @@ export default function Auth() {
   const [confirm, setConfirm] = useState("");
   const [selectedRole, setSelectedRole] = useState<"student" | "admin">("student");
   const [terms, setTerms] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+
 
   // Auto-redirect if already logged in
   useEffect(() => {
@@ -99,11 +101,11 @@ export default function Auth() {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
       password: parsed.data.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${window.location.origin}/auth`,
         data: { name: parsed.data.name, role: parsed.data.role },
       },
     });
@@ -112,9 +114,31 @@ export default function Auth() {
       toast.error(error.message.includes("registered") ? "An account with this email already exists" : error.message);
       return;
     }
+    if (!data.session) {
+      setPendingEmail(parsed.data.email);
+      toast.success("Verification email sent — check your inbox.");
+      return;
+    }
     toast.success("Account created! Welcome to MyLib.");
     navigate("/", { replace: true });
   };
+
+  const handleResend = async () => {
+    if (!pendingEmail) return;
+    setLoading(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: pendingEmail,
+      options: { emailRedirectTo: `${window.location.origin}/auth` },
+    });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Verification email sent again.");
+  };
+
 
   const handleGoogle = async () => {
     setLoading(true);
@@ -194,7 +218,37 @@ export default function Auth() {
             <span className="text-xl font-bold">MyLib</span>
           </div>
 
+          {pendingEmail ? (
+            <div className="glass-card-elevated p-6 sm:p-8 text-center">
+              <div className="mx-auto h-14 w-14 rounded-2xl gradient-primary flex items-center justify-center text-primary-foreground mb-4">
+                <MailCheck className="h-7 w-7" />
+              </div>
+              <h2 className="text-2xl font-bold tracking-tight">Verify your email</h2>
+              <p className="text-sm text-muted-foreground mt-2">
+                We sent a verification link to <span className="font-medium text-foreground">{pendingEmail}</span>. Click it to
+                activate your account, then log in to reach your dashboard.
+              </p>
+              <div className="mt-6 space-y-3">
+                <Button onClick={handleResend} disabled={loading} variant="outline" className="w-full h-11">
+                  {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : "Resend verification email"}
+                </Button>
+                <Button
+                  onClick={() => {
+                    setPendingEmail(null);
+                    setTab("login");
+                  }}
+                  className="w-full h-11"
+                >
+                  Go to log in
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground mt-4">
+                Can't find it? Check your spam or promotions folder.
+              </p>
+            </div>
+          ) : (
           <div className="glass-card-elevated p-6 sm:p-8">
+
             <Tabs value={tab} onValueChange={(v) => setTab(v as any)} className="w-full">
               <TabsList className="grid grid-cols-2 w-full mb-6">
                 <TabsTrigger value="login">Log in</TabsTrigger>
@@ -341,6 +395,8 @@ export default function Auth() {
               )}
             </p>
           </div>
+          )}
+
 
           <p className="text-center text-xs text-muted-foreground mt-6">
             Built by <span className="font-semibold text-foreground">Nicku</span>
