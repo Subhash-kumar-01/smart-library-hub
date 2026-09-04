@@ -99,11 +99,11 @@ export default function Auth() {
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
       password: parsed.data.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: `${window.location.origin}/auth`,
         data: { name: parsed.data.name, role: parsed.data.role },
       },
     });
@@ -112,9 +112,31 @@ export default function Auth() {
       toast.error(error.message.includes("registered") ? "An account with this email already exists" : error.message);
       return;
     }
+    if (!data.session) {
+      setPendingEmail(parsed.data.email);
+      toast.success("Verification email sent — check your inbox.");
+      return;
+    }
     toast.success("Account created! Welcome to MyLib.");
     navigate("/", { replace: true });
   };
+
+  const handleResend = async () => {
+    if (!pendingEmail) return;
+    setLoading(true);
+    const { error } = await supabase.auth.resend({
+      type: "signup",
+      email: pendingEmail,
+      options: { emailRedirectTo: `${window.location.origin}/auth` },
+    });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+    toast.success("Verification email sent again.");
+  };
+
 
   const handleGoogle = async () => {
     setLoading(true);
