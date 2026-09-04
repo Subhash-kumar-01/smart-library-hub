@@ -60,6 +60,8 @@ export default function Auth() {
   const [confirm, setConfirm] = useState("");
   const [selectedRole, setSelectedRole] = useState<"student" | "admin">("student");
   const [terms, setTerms] = useState(false);
+  const [pendingEmail, setPendingEmail] = useState<string | null>(null);
+
 
   // Auto-redirect if already logged in
   useEffect(() => {
