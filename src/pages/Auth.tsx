@@ -395,6 +395,8 @@ export default function Auth() {
               )}
             </p>
           </div>
+          )}
+
 
           <p className="text-center text-xs text-muted-foreground mt-6">
             Built by <span className="font-semibold text-foreground">Nicku</span>
